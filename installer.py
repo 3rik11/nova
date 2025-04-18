@@ -6,6 +6,7 @@ import win32com.client  # Requires: pip install pywin32
 
 # ---- CONFIG ----
 GITHUB_RAW_URL = "https://raw.githubusercontent.com/3rik11/nova/main/app.py"
+GITHUB_RAW_URLv2 = "https://raw.githubusercontent.com/3rik11/nova/main/updater.py"
 FOLDER_NAME = "NovaApp"
 SCRIPT_NAME = "app.py"
 SHORTCUT_NAME = "Launch Nova.lnk"
@@ -26,6 +27,9 @@ os.makedirs(target_folder, exist_ok=True)
 print("Downloading app.py...")
 urllib.request.urlretrieve(GITHUB_RAW_URL, script_path)
 print("Download complete.")
+print("Downloading updater.py...")
+urllib.request.urlretrieve(GITHUB_RAW_URLv2, script_path)
+print("Download complete.")
 
 # Create Windows Shortcut
 print("Creating shortcut...")
@@ -34,7 +38,7 @@ shortcut = shell.CreateShortCut(str(shortcut_path))
 
 # Set the target to run python in CMD with the app
 shortcut.Targetpath = "cmd.exe"
-shortcut.Arguments = f'/k python "{script_path}"'
+shortcut.Arguments = f'/k python "{target_folder / "updater.py"}" && python "{script_path}"'
 shortcut.WorkingDirectory = str(target_folder)
 
 # Use default .exe icon (shell32.dll index 2)
