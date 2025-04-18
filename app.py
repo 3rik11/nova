@@ -229,7 +229,7 @@ def nova(name, dob, first_time):
 
 clear()
 check_for_update()
-type("WELCOME TO NEURAL OPERATIONS VIRTUAL ASSISTANT, ALSO KNOWN AS N.O.V.A.", 0.05)
+type("WWELCOME TO NEURAL OPERATIONS VIRTUAL ASSISTANT, ALSO KNOWN AS N.O.V.A.", 0.05)
 time.sleep(0.3)
 clear()
 type("WOULD YOU LIKE TO CONTINUE AS A GUEST USER?", 0.05)
