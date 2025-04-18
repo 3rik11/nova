@@ -1,3 +1,4 @@
+import urllib.request
 import time
 import random
 import os
@@ -8,8 +9,31 @@ today = date.today()
 
 # N.O.V.A. – Neural Operations Virtual Assistant
 
-def rickroll_cmd():
-    os.system('start cmd /k "curl https://raw.githubusercontent.com/keroserene/rickrollrc/master/roll.sh | powershell"')
+def check_for_update():
+    remote_url = "https://raw.githubusercontent.com/3rik11/nova/main/app.py"
+    local_file = os.path.realpath(__file__)
+
+    try:
+        with urllib.request.urlopen(remote_url) as response:
+            remote_code = response.read()
+
+        with open(local_file, "rb") as local:
+            local_code = local.read()
+
+        if remote_code != local_code:
+            print("[UPDATE] New version found! Updating...")
+            time.sleep(3)
+            with open(local_file, "wb") as f:
+                f.write(remote_code)
+            print("[UPDATE] Update complete. Please restart the app.")
+            time.sleep(10)
+            exit()
+        else:
+            print("[OK] App is up to date.")
+            time.sleep(1)
+    except Exception as e:
+        print(f"[ERROR] Failed to check for updates: {e}")
+        time.sleep(3)
 
 def type(text, delay):
     for char in text:
@@ -204,7 +228,7 @@ def nova(name, dob, first_time):
 #     main()
 
 clear()
-
+check_for_update()
 type("WELCOME TO NEURAL OPERATIONS VIRTUAL ASSISTANT, ALSO KNOWN AS N.O.V.A.", 0.05)
 time.sleep(0.3)
 clear()
