@@ -2,7 +2,6 @@ import os
 import shutil
 import time
 import urllib.request
-from datetime import datetime
 from urllib.request import urlretrieve
 
 def create_folders_and_files():
@@ -10,15 +9,12 @@ def create_folders_and_files():
     user_documents = os.path.expanduser("~\\Documents")
     nova_app_folder = os.path.join(user_documents, "NovaApp")
     assets_folder = os.path.join(nova_app_folder, "assets")
-    backup_folder = os.path.join(nova_app_folder, "Backups")
 
     # Create necessary directories if they don't exist
     if not os.path.exists(nova_app_folder):
         os.makedirs(nova_app_folder)
     if not os.path.exists(assets_folder):
         os.makedirs(assets_folder)
-    if not os.path.exists(backup_folder):
-        os.makedirs(backup_folder)
 
     # Download the icon and save it in the assets folder
     icon_url = "https://raw.githubusercontent.com/3rik11/nova/main/icon.ico"
@@ -32,13 +28,7 @@ def create_folders_and_files():
     # Download app.py content from the URL and save to the file
     download_file(app_url, app_file_path)
 
-    # Backup the app.py file with a timestamp
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    backup_file_path = os.path.join(backup_folder, f"app_backup_{timestamp}.py")
-    shutil.copy2(app_file_path, backup_file_path)
-
     print(f"App installed at {app_file_path}")
-    print(f"Backup created at {backup_file_path}")
 
     # Create a Windows shortcut on Desktop to run app.py
     create_shortcut_on_desktop(app_file_path, icon_path)
@@ -56,31 +46,3 @@ def download_file(url, path):
     try:
         urllib.request.urlretrieve(url, path)
         print(f"File downloaded from {url} to {path}")
-    except Exception as e:
-        print(f"Failed to download file: {e}")
-
-def create_shortcut_on_desktop(app_file_path, icon_path):
-    # Define the shortcut path
-    desktop_path = os.path.join(os.path.expanduser("~"), "Desktop")
-    shortcut_path = os.path.join(desktop_path, "NOVA Assistant.lnk")
-
-    # Define the command to run the app.py (in CMD) and set the icon for the CMD window
-    target = "cmd.exe"
-    arguments = f"/K python \"{app_file_path}\""  # Run app.py using cmd
-    icon = icon_path  # Use the downloaded icon for the shortcut and CMD window
-
-    # Create a Windows shortcut (.lnk) using the pywin32 library
-    try:
-        import win32com.client
-        shell = win32com.client.Dispatch("WScript.Shell")
-        shortcut = shell.CreateShortCut(shortcut_path)
-        shortcut.TargetPath = target
-        shortcut.Arguments = arguments
-        shortcut.IconLocation = icon
-        shortcut.save()
-        print(f"Shortcut created at {shortcut_path}")
-    except ImportError:
-        print("Error creating shortcut. Please install pywin32 using 'pip install pywin32'")
-
-if __name__ == "__main__":
-    create_folders_and_files()

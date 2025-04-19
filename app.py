@@ -8,6 +8,7 @@ import platform
 from datetime import datetime, date
 import ast
 import subprocess
+
 VERSION = "v1.1.0"
 
 print(f"N.O.V.A. Assistant – {VERSION}")
@@ -30,23 +31,35 @@ def safe_eval(expr):
 def update_file_from_github(raw_url):
     """
     Replaces the contents of the current file with the contents of a file from a GitHub raw URL,
-    creating a backup first.
+    creating a backup first in the 'Backups' folder.
     """
     try:
+        # Define the backup folder path
+        user_documents = os.path.expanduser("~\\Documents")
+        nova_app_folder = os.path.join(user_documents, "NovaApp")
+        backup_folder = os.path.join(nova_app_folder, "Backups")
+
+        # Ensure the backup folder exists
+        if not os.path.exists(backup_folder):
+            os.makedirs(backup_folder)
+
+        # Get the current file path
+        current_file_path = os.path.abspath(__file__)
+
+        # Download the new content from GitHub
         response = urllib.request.urlopen(raw_url)
         new_content = response.read().decode('utf-8')
 
-        current_file_path = os.path.abspath(__file__)
-        backup_path = current_file_path + ".bak"
+        # Create a backup with timestamp
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        backup_file_path = os.path.join(backup_folder, f"app_backup_{timestamp}.py")
+        shutil.copy2(current_file_path, backup_file_path)
 
-        # Backup current script
-        shutil.copy2(current_file_path, backup_path)
-
-        # Write new content
+        # Write new content to the current file
         with open(current_file_path, 'w', encoding='utf-8') as current_file:
             current_file.write(new_content)
 
-        print("✅ File successfully updated from GitHub. Backup created at:", backup_path)
+        print(f"✅ File successfully updated from GitHub. Backup created at: {backup_file_path}")
     except Exception as e:
         print(f"❌ Update failed: {e}")
 
@@ -203,54 +216,6 @@ def nova(name, dob, first_time):
     time.sleep(1)
     clear()
     firsttime = 0
-
-
-
-# def boot_sequence():
-#     lines = [
-#         "[ OK ] Initializing nova-Core v3.7.29",
-#         "[ OK ] Loading ROM memory sectors",
-#         "[ OK ] Establishing internal kernel interfaces",
-#         "[ OK ] Mounting /dev/null.exe",
-#         "[ OK ] Syncing time server @ 127.0.0.1.99:1400",
-#         "[ OK ] Checking quantum loopback",
-#         "[ OK ] Activating neural input grid",
-#         "[WARN] Entropy below threshold, reseeding...",
-#         "[ OK ] Bootstrapping hypervisor",
-#         "[ OK ] Loading modules: ui, net, core, shell",
-#         "[FAIL] Unable to load module 'coffee-maker'",
-#         "[ OK ] Establishing connection to host shell",
-#         "[ OK ] Injecting personality core",
-#         "[ OK ] System entropy nominal",
-#         "[ OK ] Boot complete. Welcome, Operator.",
-#     ]
-
-#     for line in lines:
-#         time.sleep(random.uniform(0.05, 0.15))
-#         print(line)
-
-# def matrix_rain(duration=3):
-#     chars = "01█▓▒░<>/"
-#     end_time = time.time() + duration
-#     columns = 80
-
-#     while time.time() < end_time:
-#         line = ''.join(random.choice(chars) for _ in range(columns))
-#         print(line)
-#         time.sleep(0.05)
-
-# def main():
-#     clear()
-#     matrix_rain(2)
-#     print("\n>>> SYSTEM BOOTING...\n")
-#     time.sleep(1)
-#     boot_sequence()
-#     print("\n>>> nova-core ready. Launching interface...\n")
-#     time.sleep(5)
-#     matrix_rain(2)
-
-# if __name__ == "__main__":
-#     main()
 
 
 
