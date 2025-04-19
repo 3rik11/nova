@@ -46,7 +46,7 @@ def update_file_from_github(raw_url):
 # Run the update function on startup
 github_raw_url = "https://raw.githubusercontent.com/3rik11/nova/main/app.py"  # Replace with your raw URL
 update_file_from_github(github_raw_url)
-VERSION = "v1.3.6"
+VERSION = "v1.3.7"
 os.system('color A')
 print(f"N.O.V.A. {VERSION}")
 time.sleep(2)
@@ -180,10 +180,14 @@ def nova(name, dob, first_time):
             type("REDIRECTING TO FORM WEBSITE", 0.05)
             time.sleep(2)
             webbrowser.open(URL)
+            input("Press Enter to continue...")
+            clear()
         elif command == "reboot":
             if os.name == 'nt':
                 user = os.getlogin()
-                os.system(fr'start cmd /k "cd /d C:\Users\{user}\Documents\Python\Getting Started && python app.py"')
+                os.system(fr'start cmd /k "cd /d C:\Users\{user}\Documents\NovaApp && python app.py"')
+                os.system('exit')
+                break
             else:
                 os.system(f'python3 "{os.path.abspath(__file__)}" &')
                 exit()
@@ -221,7 +225,6 @@ def nova(name, dob, first_time):
             clear()
             type("GOODBYE, " + name, 0.05)
             os.system('exit')
-            break
         elif command == "clear":
             clear()
         elif command == "calculator":
