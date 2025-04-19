@@ -9,7 +9,7 @@ from datetime import datetime, date
 import ast
 import subprocess
 
-VERSION = "v1.2.0"
+VERSION = "v1.2.2"
 
 def safe_eval(expr):
     try:
