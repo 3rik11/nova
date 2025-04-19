@@ -21,7 +21,7 @@ def delete_shortcut():
         if os.name == 'nt':  # Windows
             user_profile = os.environ.get("USERPROFILE")
             desktop_path = os.path.join(user_profile, "Desktop")
-            shortcut_path = os.path.join(desktop_path, "NovaApp.lnk")
+            shortcut_path = os.path.join(desktop_path, "NOVA Assistant.lnk")  # Correct shortcut name here
         else:  # For other operating systems, like macOS and Linux
             user_profile = os.environ.get("HOME")
             desktop_path = os.path.join(user_profile, "Desktop")
