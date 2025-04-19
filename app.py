@@ -9,10 +9,10 @@ from datetime import datetime, date
 import ast
 import subprocess
 
-VERSION = "v1.2.2"
+VERSION = "v1.2.3"
 os.system('color A')
-print(f"N.O.V.A. Assistant – {VERSION} – Wait 10 seconds")
-time.sleep(10)
+print(f"N.O.V.A. Assistant – {VERSION}")
+time.sleep(2)
 
 def safe_eval(expr):
     try:
