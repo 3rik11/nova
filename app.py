@@ -62,10 +62,8 @@ def check_if_birthday(dob, space=1):
                 message = "🎉 HAPPY BIRTHDAY!"
             return str(message), 1  # 1 indicates it's the user's birthday
         else:
-            # Return an empty string and a flag of 0 if it's not their birthday
             return "", 0  # 0 indicates it's not their birthday
     except ValueError:
-        # If the date format is invalid, return an error message and flag 0
         return " (Invalid date format. Use DD-MM-YYYY)", 0
 
 def novaintro(name, dob):
@@ -97,8 +95,8 @@ def nova(name, dob, first_time):
         type(birthday_msg, 0.05)
     elif birthday == 0 and first_time == "N":
         type("WELCOME " + name, 0.05)
-    while True:       
-        if firsttime == 1:          
+    while True:
+        if firsttime == 1:
             type("TYPE HELP FOR A LIST OF COMMANDS", 0.05)
             typein(">>> ", 0.05)
             command = input().lower()
@@ -157,7 +155,6 @@ def nova(name, dob, first_time):
         elif command == "clear":
             clear()
         elif command == "calculator":
-            # curl ASCII.live/can-you-hear-me
             cmdvar = os.system('curl ASCII.live/can-you-hear-me')
             print(cmdvar)
         elif command == "math":
@@ -181,6 +178,8 @@ def nova(name, dob, first_time):
     time.sleep(1)
     clear()
     firsttime = 0
+
+
 
 # def boot_sequence():
 #     lines = [
@@ -228,6 +227,8 @@ def nova(name, dob, first_time):
 # if __name__ == "__main__":
 #     main()
 
+
+
 clear()
 type("WELCOME TO NEURAL OPERATIONS VIRTUAL ASSISTANT, ALSO KNOWN AS N.O.V.A.", 0.05)
 time.sleep(0.3)
@@ -265,7 +266,7 @@ elif user_choise == "N":
         type("INVALID AUTHENTICATION CODE", 0.05)
         time.sleep(2)
         clear()
-        type("SHUTTING DOWN APPLIACTION", 0.05)
+        type("SHUTTING DOWN APPLICATION", 0.05)
         time.sleep(2)
         clear()
         exit()
@@ -274,7 +275,7 @@ else:
     type("INVALID INPUT", 0.05)
     time.sleep(2)
     clear()
-    type("SHUTTING DOWN APPLIACTION", 0.05)
+    type("SHUTTING DOWN APPLICATION", 0.05)
     time.sleep(2)
     clear()
     exit()
