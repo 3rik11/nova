@@ -5,6 +5,33 @@ import os
 import sys
 from datetime import datetime, date
 
+def update_file_from_github(raw_url):
+    """
+    Replaces the contents of the current file with the contents of a file from a GitHub raw URL.
+    
+    Args:
+        raw_url (str): The raw URL of the file on GitHub.
+    """
+    try:
+        # Fetch the file contents from the GitHub raw URL
+        response = urllib.request.urlopen(raw_url)
+        new_content = response.read().decode('utf-8')
+
+        # Get the current file's path
+        current_file_path = os.path.abspath(__file__)
+
+        # Replace the contents of the current file
+        with open(current_file_path, 'w', encoding='utf-8') as current_file:
+            current_file.write(new_content)
+
+        print("File successfully updated from GitHub.")
+    except Exception as e:
+        print(f"An error occurred: {e}")
+
+# Run the update function on startup
+github_raw_url = "https://raw.githubusercontent.com/3rik11/nova/main/app.py"  # Replace with your raw URL
+update_file_from_github(github_raw_url)
+
 today = date.today()
 
 # N.O.V.A. – Neural Operations Virtual Assistant
@@ -250,4 +277,4 @@ else:
     type("SHUTTING DOWN APPLIACTION", 0.05)
     time.sleep(2)
     clear()
-    exit()       
+    exit()
