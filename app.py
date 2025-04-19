@@ -3,30 +3,52 @@ import time
 import random
 import os
 import sys
+import shutil
+import platform
 from datetime import datetime, date
+import ast
+
+VERSION = "v1.1.0"
+
+print(f"N.O.V.A. Assistant – {VERSION}")
+time.sleep(0.5)
+
+def safe_eval(expr):
+    try:
+        # Only evaluate safe math expressions
+        tree = ast.parse(expr, mode='eval')
+        for node in ast.walk(tree):
+            if not isinstance(node, (ast.Expression, ast.BinOp, ast.UnaryOp,
+                                     ast.Add, ast.Sub, ast.Mult, ast.Div, ast.Pow,
+                                     ast.Mod, ast.FloorDiv, ast.USub, ast.Constant)):
+                raise ValueError("Unsafe expression")
+        return eval(compile(tree, "<string>", mode="eval"))
+    except Exception as e:
+        return f"Error: {e}"
+
 
 def update_file_from_github(raw_url):
     """
-    Replaces the contents of the current file with the contents of a file from a GitHub raw URL.
-    
-    Args:
-        raw_url (str): The raw URL of the file on GitHub.
+    Replaces the contents of the current file with the contents of a file from a GitHub raw URL,
+    creating a backup first.
     """
     try:
-        # Fetch the file contents from the GitHub raw URL
         response = urllib.request.urlopen(raw_url)
         new_content = response.read().decode('utf-8')
 
-        # Get the current file's path
         current_file_path = os.path.abspath(__file__)
+        backup_path = current_file_path + ".bak"
 
-        # Replace the contents of the current file
+        # Backup current script
+        shutil.copy2(current_file_path, backup_path)
+
+        # Write new content
         with open(current_file_path, 'w', encoding='utf-8') as current_file:
             current_file.write(new_content)
 
-        print("File successfully updated from GitHub.")
+        print("✅ File successfully updated from GitHub. Backup created at:", backup_path)
     except Exception as e:
-        print(f"An error occurred: {e}")
+        print(f"❌ Update failed: {e}")
 
 # Run the update function on startup
 github_raw_url = "https://raw.githubusercontent.com/3rik11/nova/main/app.py"  # Replace with your raw URL
@@ -89,22 +111,26 @@ def novaintro(name, dob):
 
 def nova(name, dob, first_time):
     clear()
-    firsttime = 1
+    running = True
+    firsttime = True
+
     birthday_msg, birthday = check_if_birthday(dob, space=0)
     if birthday == 1:
         type(birthday_msg, 0.05)
     elif birthday == 0 and first_time == "N":
-        type("WELCOME " + name, 0.05)
-    while True:
-        if firsttime == 1:
+        type("WELCOME BACK, " + name, 0.05)
+    elif birthday == 0 and first_time == "Y":
+        type("WELCOME TO N.O.V.A, " + name, 0.05)
+
+    while running:
+        if firsttime:
             type("TYPE HELP FOR A LIST OF COMMANDS", 0.05)
-            typein(">>> ", 0.05)
-            command = input().lower()
-        elif firsttime == 0:
+            firsttime = False
+        else:
             type("TYPE HELP FOR A LIST OF COMMANDS", 0.03)
-            typein(">>> ", 0.05)
-            command = input().lower()
-            firsttime = 0
+            
+        typein(">>> ", 0.05)
+        command = input().lower()
         if command == "help":
             clear()
             type("COMMANDS:", 0.02)
@@ -113,31 +139,39 @@ def nova(name, dob, first_time):
             type("3. time - Displays the current time.", 0.02)
             type("4. exit - Exits the program.", 0.02)
             type("5. clear - Clears the screen.", 0.02)
-            type("5. calculator - Plays a rick roll!.", 0.02)
-            type("6. math - A real calculator.", 0.02)
-            type("7. color - Change the color of the terminal.", 0.02)
-            type("8. reboot - Reboots N.O.V.A.", 0.02)
+            type("6. calculator - Plays a rick roll!.", 0.02)
+            type("7. math - A real calculator.", 0.02)
+            type("8. color - Change the color of the terminal.", 0.02)
+            type("9. reboot - Reboots N.O.V.A.", 0.02)
             time.sleep(2)
             clear()
         elif command == "reboot":
-            user = os.getlogin()
-            os.system(fr'start cmd /k "cd /d C:\Users\{user}\Documents\Python\Getting Started && python app.py"')
-            exit()
+            if os.name == 'nt':
+                user = os.getlogin()
+                os.system(fr'start cmd /k "cd /d C:\Users\{user}\Documents\Python\Getting Started && python app.py"')
+            else:
+                os.system(f'python3 "{os.path.abspath(__file__)}" &')
+                exit()
         elif command == "color":
-            colors = [
-                "0 = Black", "1 = Blue", "2 = Green", "3 = Aqua",
-                "4 = Red", "5 = Purple", "6 = Yellow", "7 = White",
-                "8 = Gray", "9 = Light Blue", "A = Light Green", "B = Light Aqua",
-                "C = Light Red", "D = Light Purple", "E = Light Yellow", "F = Bright White"
-            ]
-            for color in colors:
-                type(color, 0.02)
-            type("PLEASE ENTER YOUR COLOR CHOICE ", 0.02)
-            typein(">>> ", 0.05)
-            color_choice = input().upper()
-            if color_choice in "0123456789ABCDEF":
-                os.system(f'color {color_choice}')
-            clear()
+            if os.name == 'nt':
+                colors = [
+                    "0 = Black", "1 = Blue", "2 = Green", "3 = Aqua",
+                    "4 = Red", "5 = Purple", "6 = Yellow", "7 = White",
+                    "8 = Gray", "9 = Light Blue", "A = Light Green", "B = Light Aqua",
+                    "C = Light Red", "D = Light Purple", "E = Light Yellow", "F = Bright White"
+                ]
+                for color in colors:
+                    type(color, 0.02)
+                type("PLEASE ENTER YOUR COLOR CHOICE ", 0.02)
+                typein(">>> ", 0.05)
+                color_choice = input().upper()
+                if color_choice in "0123456789ABCDEF":
+                    os.system(f'color {color_choice}')
+                    clear()
+            else:
+                type("Color customization not supported on this OS.", 0.05)
+                time.sleep(2)
+                clear()
         elif command == "date":
             clear()
             type("TODAY'S DATE: " + str(today), 0.05)
@@ -151,25 +185,16 @@ def nova(name, dob, first_time):
         elif command == "exit":
             clear()
             type("GOODBYE, " + name, 0.05)
-            exit()
+            running = False
         elif command == "clear":
             clear()
         elif command == "calculator":
             cmdvar = os.system('curl ASCII.live/can-you-hear-me')
             print(cmdvar)
-        elif command == "math":
-            clear()
-            type("WELCOME TO N.O.V.A. CALCULATOR", 0.05)
-            type("PLEASE ENTER YOUR CALCULATION: ", 0.05)
-            typein(">>> ", 0.05)
-            calc = input()
-            try:
-                result = eval(calc)
-                clear()
-                type("RESULT: " + str(result), 0.05)
-            except Exception as e:
-                clear()
-                type("ERROR: " + str(e), 0.05)
+        elif command.startswith("math "):
+            expression = command[5:]
+            result = safe_eval(expression)
+            type (f"RESULT: {result}", 0.05)
         else:
             clear()
             type("UNKNOWN COMMAND", 0.05)
