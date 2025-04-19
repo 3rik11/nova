@@ -7,26 +7,6 @@ import shutil
 import platform
 from datetime import datetime, date
 import ast
-import subprocess
-
-VERSION = "v1.2.3"
-os.system('color A')
-print(f"N.O.V.A. Assistant – {VERSION}")
-time.sleep(2)
-
-def safe_eval(expr):
-    try:
-        # Only evaluate safe math expressions
-        tree = ast.parse(expr, mode='eval')
-        for node in ast.walk(tree):
-            if not isinstance(node, (ast.Expression, ast.BinOp, ast.UnaryOp,
-                                     ast.Add, ast.Sub, ast.Mult, ast.Div, ast.Pow,
-                                     ast.Mod, ast.FloorDiv, ast.USub, ast.Constant)):
-                raise ValueError("Unsafe expression")
-        return eval(compile(tree, "<string>", mode="eval"))
-    except Exception as e:
-        return f"Error: {e}"
-
 
 def update_file_from_github(raw_url):
     """
@@ -66,6 +46,26 @@ def update_file_from_github(raw_url):
 # Run the update function on startup
 github_raw_url = "https://raw.githubusercontent.com/3rik11/nova/main/app.py"  # Replace with your raw URL
 update_file_from_github(github_raw_url)
+VERSION = "v1.2.3"
+os.system('color A')
+print(f"N.O.V.A. {VERSION}")
+time.sleep(2)
+
+def safe_eval(expr):
+    try:
+        # Only evaluate safe math expressions
+        tree = ast.parse(expr, mode='eval')
+        for node in ast.walk(tree):
+            if not isinstance(node, (ast.Expression, ast.BinOp, ast.UnaryOp,
+                                     ast.Add, ast.Sub, ast.Mult, ast.Div, ast.Pow,
+                                     ast.Mod, ast.FloorDiv, ast.USub, ast.Constant)):
+                raise ValueError("Unsafe expression")
+        return eval(compile(tree, "<string>", mode="eval"))
+    except Exception as e:
+        return f"Error: {e}"
+
+
+
 today = date.today()
 
 # N.O.V.A. – Neural Operations Virtual Assistant
