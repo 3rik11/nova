@@ -9,10 +9,7 @@ from datetime import datetime, date
 import ast
 import subprocess
 
-VERSION = "v1.1.0"
-
-print(f"N.O.V.A. Assistant – {VERSION}")
-time.sleep(0.5)
+VERSION = "v1.2.0"
 
 def safe_eval(expr):
     try:
@@ -67,6 +64,8 @@ def update_file_from_github(raw_url):
 github_raw_url = "https://raw.githubusercontent.com/3rik11/nova/main/app.py"  # Replace with your raw URL
 update_file_from_github(github_raw_url)
 os.system('color A')
+print(f"N.O.V.A. Assistant – {VERSION}")
+time.sleep(1)
 today = date.today()
 
 # N.O.V.A. – Neural Operations Virtual Assistant
@@ -198,7 +197,8 @@ def nova(name, dob, first_time):
         elif command == "exit":
             clear()
             type("GOODBYE, " + name, 0.05)
-            running = False
+            os.system('exit')
+            os._exit(0)
         elif command == "clear":
             clear()
         elif command == "calculator":
