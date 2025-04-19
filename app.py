@@ -256,7 +256,7 @@ elif user_choise == "N":
     time.sleep(1)
     clear()
     if authcode == "ADMIN":
-        nova("ADMIN", "25-07-2014")
+        nova("ADMIN", "25-07-2014", first_time="N")
     else:
         type("INVALID AUTHENTICATION CODE", 0.05)
         time.sleep(2)
