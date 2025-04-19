@@ -12,7 +12,7 @@ def create_folders_and_files():
     assets_folder = os.path.join(nova_app_folder, "assets")
     backup_folder = os.path.join(nova_app_folder, "Backups")
 
-    # Create necessary directories
+    # Create necessary directories if they don't exist
     if not os.path.exists(nova_app_folder):
         os.makedirs(nova_app_folder)
     if not os.path.exists(assets_folder):
@@ -25,17 +25,14 @@ def create_folders_and_files():
     icon_path = os.path.join(assets_folder, "icon.ico")
     download_icon(icon_url, icon_path)
 
-    # Define the path to save the app.py
+    # Define the URL for app.py
+    app_url = "https://raw.githubusercontent.com/3rik11/nova/main/app.py"
     app_file_path = os.path.join(nova_app_folder, "app.py")
 
-    # Sample app.py content (replace with actual content or load from file)
-    app_content = """[PASTE APP.PY CONTENT HERE]"""
+    # Download app.py content from the URL and save to the file
+    download_file(app_url, app_file_path)
 
-    # Write app.py content to the file
-    with open(app_file_path, 'w') as app_file:
-        app_file.write(app_content)
-
-    # Backup the app.py file with timestamp
+    # Backup the app.py file with a timestamp
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     backup_file_path = os.path.join(backup_folder, f"app_backup_{timestamp}.py")
     shutil.copy2(app_file_path, backup_file_path)
@@ -54,9 +51,17 @@ def download_icon(url, path):
     except Exception as e:
         print(f"Failed to download icon: {e}")
 
+def download_file(url, path):
+    """Download a file from a URL and save it to the specified path"""
+    try:
+        urllib.request.urlretrieve(url, path)
+        print(f"File downloaded from {url} to {path}")
+    except Exception as e:
+        print(f"Failed to download file: {e}")
+
 def create_shortcut_on_desktop(app_file_path, icon_path):
     # Define the shortcut path
-    desktop_path = os.path.join(os.path.join(os.path.expanduser("~"), "Desktop"))
+    desktop_path = os.path.join(os.path.expanduser("~"), "Desktop")
     shortcut_path = os.path.join(desktop_path, "NOVA Assistant.lnk")
 
     # Define the command to run the app.py (in CMD) and set the icon for the CMD window
@@ -64,7 +69,7 @@ def create_shortcut_on_desktop(app_file_path, icon_path):
     arguments = f"/K python \"{app_file_path}\""  # Run app.py using cmd
     icon = icon_path  # Use the downloaded icon for the shortcut and CMD window
 
-    # Create a Windows shortcut (.lnk) using the 'os' module or pywin32 library
+    # Create a Windows shortcut (.lnk) using the pywin32 library
     try:
         import win32com.client
         shell = win32com.client.Dispatch("WScript.Shell")
