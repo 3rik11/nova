@@ -7,7 +7,7 @@ import shutil
 import platform
 from datetime import datetime, date
 import ast
-
+import subprocess
 VERSION = "v1.1.0"
 
 print(f"N.O.V.A. Assistant – {VERSION}")
