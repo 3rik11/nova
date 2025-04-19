@@ -64,8 +64,8 @@ def update_file_from_github(raw_url):
 github_raw_url = "https://raw.githubusercontent.com/3rik11/nova/main/app.py"  # Replace with your raw URL
 update_file_from_github(github_raw_url)
 os.system('color A')
-print(f"N.O.V.A. Assistant – {VERSION} – Press enter to continue")
-input()
+print(f"N.O.V.A. Assistant – {VERSION} – Wait 10 seconds")
+time.sleep(10)
 today = date.today()
 
 # N.O.V.A. – Neural Operations Virtual Assistant
