@@ -282,7 +282,7 @@ elif user_choise == "N":
         time.sleep(2)
         clear()
         exit()
-elif user_choise == "fast":
+elif user_choise == "FAST":
     nova("ADMIN", "25-07-2014", first_time="N")
 else:
     clear()
