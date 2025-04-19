@@ -37,7 +37,7 @@ def create_folders_and_files():
     download_icon(icon_url, icon_path)
 
     # Define the URL for app.py
-    app_url = "https://raw.githubusercontent.com/3rik11/nova/refs/heads/main/app.py"
+    app_url = "https://raw.githubusercontent.com/3rik11/nova/main/app.py"
     app_file_path = os.path.join(nova_app_folder, "app.py")
 
     # Download app.py content from the URL and save to the file
