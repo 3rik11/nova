@@ -8,6 +8,7 @@ import platform
 from datetime import datetime, date
 import ast
 import webbrowser
+import requests
 def update_file_from_github(raw_url):
     """
     Replaces the contents of the current file with the contents of a file from a GitHub raw URL,
@@ -50,6 +51,17 @@ VERSION = "v1.3.7"
 os.system('color A')
 print(f"N.O.V.A. {VERSION}")
 time.sleep(2)
+
+def get_joke():
+    url = "https://v2.jokeapi.dev/joke/Any?type=single"
+    try:
+        response = requests.get(url)
+        data = response.json()
+        if data["error"]:
+            return "Sorry, I couldn't fetch a joke right now."
+        return data["joke"]
+    except Exception as e:
+        return f"Oops! Something went wrong: {e}"
 
 def clear_backups(backup_folder):
     """
@@ -171,10 +183,20 @@ def nova(name, dob, first_time):
             type("9. reboot - Reboots N.O.V.A.", 0.02)
             type("10. signin - Ask me for a unique password that stores all of your details so you dont have to enter them every time you login.", 0.02)
             type("11. clearbackups - Clears all backups older than 7 days.", 0.02)
+            type("12. joke - Shows a joke.", 0.02)
             time.sleep(2)
+            clear()
+        elif command == "joke":
+            clear()
+            joke = get_joke()
+            type(joke, 0.05)
+            input("Press Enter to continue...")
             clear()
         elif command == "clearbackups":
             clear_backups(os.path.join(os.path.expanduser("~\\Documents"), "NovaApp", "Backups"))
+            type("BACKUPS CLEARED", 0.05)
+            time.sleep(0.5)
+            clear()
         elif command == "signin":
             URL = "3rik11.github.io/nova/from.html"
             type("REDIRECTING TO FORM WEBSITE", 0.05)
