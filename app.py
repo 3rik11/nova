@@ -66,7 +66,7 @@ def update_file_from_github(raw_url):
 # Run the update function on startup
 github_raw_url = "https://raw.githubusercontent.com/3rik11/nova/main/app.py"  # Replace with your raw URL
 update_file_from_github(github_raw_url)
-
+os.system('color A')
 today = date.today()
 
 # N.O.V.A. – Neural Operations Virtual Assistant

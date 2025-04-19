@@ -3,6 +3,21 @@ import shutil
 import time
 import urllib.request
 from urllib.request import urlretrieve
+import subprocess
+import sys
+
+# Function to ensure required libraries are installed
+def install_required_libraries():
+    required_libraries = ["pywin32"]
+
+    for lib in required_libraries:
+        try:
+            # Try to import the library
+            __import__(lib)
+        except ImportError:
+            # If library is not installed, install it using pip
+            print(f"Installing {lib}...")
+            subprocess.check_call([sys.executable, "-m", "pip", "install", lib])
 
 def create_folders_and_files():
     # Define the target directory for the app installation
@@ -79,4 +94,8 @@ def create_shortcut_on_desktop(app_file_path, icon_path):
         print("Error creating shortcut. Please install pywin32 using 'pip install pywin32'")
 
 if __name__ == "__main__":
+    # Ensure required libraries are installed
+    install_required_libraries()
+
+    # Proceed with the installation of folders and files
     create_folders_and_files()
