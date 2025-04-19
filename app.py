@@ -46,10 +46,24 @@ def update_file_from_github(raw_url):
 # Run the update function on startup
 github_raw_url = "https://raw.githubusercontent.com/3rik11/nova/main/app.py"  # Replace with your raw URL
 update_file_from_github(github_raw_url)
-VERSION = "v1.3.1"
+VERSION = "v1.3.2"
 os.system('color A')
 print(f"N.O.V.A. {VERSION}")
 time.sleep(2)
+
+def clear_backups(backup_folder):
+    """
+    Deletes all files in the backup folder older than 7 days.
+    """
+    try:
+        now = time.time()
+        for filename in os.listdir(backup_folder):
+            file_path = os.path.join(backup_folder, filename)
+            if os.path.isfile(file_path) and (now - os.path.getmtime(file_path)) > 7 * 86400:
+                os.remove(file_path)
+                print(f"Deleted old backup: {file_path}")
+    except Exception as e:
+        print(f"Error clearing backups: {e}")
 
 def safe_eval(expr):
     try:
@@ -156,8 +170,11 @@ def nova(name, dob, first_time):
             type("8. color - Change the color of the terminal.", 0.02)
             type("9. reboot - Reboots N.O.V.A.", 0.02)
             type("10. signin - Ask me for a unique password that stores all of your details so you dont have to enter them every time you login.", 0.02)
+            type("11. clearbackups - Clears all backups older than 7 days.", 0.02)
             time.sleep(2)
             clear()
+        elif command == "clearbackups":
+            clear_backups(os.path.join(os.path.expanduser("~\\Documents"), "NovaApp", "Backups"))
         elif command == "signin":
             URL = "3rik11.github.io/nova/from.html"
             type("REDIRECTING TO FORM WEBSITE", 0.05)
