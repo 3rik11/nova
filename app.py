@@ -7,7 +7,7 @@ import shutil
 import platform
 from datetime import datetime, date
 import ast
-
+import webbrowser
 def update_file_from_github(raw_url):
     """
     Replaces the contents of the current file with the contents of a file from a GitHub raw URL,
@@ -46,7 +46,7 @@ def update_file_from_github(raw_url):
 # Run the update function on startup
 github_raw_url = "https://raw.githubusercontent.com/3rik11/nova/main/app.py"  # Replace with your raw URL
 update_file_from_github(github_raw_url)
-VERSION = "v1.2.6"
+VERSION = "v1.3.0"
 os.system('color A')
 print(f"N.O.V.A. {VERSION}")
 time.sleep(2)
@@ -155,8 +155,14 @@ def nova(name, dob, first_time):
             type("7. math - A real calculator.", 0.02)
             type("8. color - Change the color of the terminal.", 0.02)
             type("9. reboot - Reboots N.O.V.A.", 0.02)
+            type("10. signin - Ask me for a unique password that stores all of your details so you dont have to enter them every time you login.", 0.02)
             time.sleep(2)
             clear()
+        elif command == "signin":
+            URL = "3rik11.github.io/nova/from.html"
+            type("REDIRECTING TO FORM WEBSITE", 0.05)
+            time.sleep(2)
+            webbrowser.open(URL)
         elif command == "reboot":
             if os.name == 'nt':
                 user = os.getlogin()
@@ -198,7 +204,7 @@ def nova(name, dob, first_time):
             clear()
             type("GOODBYE, " + name, 0.05)
             os.system('exit')
-            os._exit(0)
+            break
         elif command == "clear":
             clear()
         elif command == "calculator":
@@ -215,7 +221,6 @@ def nova(name, dob, first_time):
             clear()
     time.sleep(1)
     clear()
-    firsttime = 0
 
 
 
@@ -251,7 +256,7 @@ elif user_choise == "N":
     time.sleep(1)
     clear()
     if authcode == "ADMIN":
-        novaintro("ADMIN", "25-07-2014")
+        nova("ADMIN", "25-07-2014")
     else:
         type("INVALID AUTHENTICATION CODE", 0.05)
         time.sleep(2)
