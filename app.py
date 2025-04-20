@@ -35,8 +35,11 @@ def update_file_from_github(raw_url):
         response = urllib.request.urlopen(raw_url)
         new_content = response.read().decode('utf-8')
 
-        # Compare contents
-        if current_content == new_content:
+       # Normalize line endings and strip extra spaces
+        normalized_current = current_content.replace('\r\n', '\n').strip()
+        normalized_new = new_content.replace('\r\n', '\n').strip()
+
+        if normalized_current == normalized_new:
             print("🟩 You already have the latest version of app.py.")
             return  # Exit if no update is needed
 
