@@ -48,16 +48,15 @@ def update_file_from_github(raw_url):
 # Run the update function on startup
 github_raw_url = "https://raw.githubusercontent.com/3rik11/nova/main/app.py"  # Replace with your raw URL
 update_file_from_github(github_raw_url)
+def reboot():
+    python = sys.executable
+    os.execl(python, python, *sys.argv)
+reboot()
 VERSION = "v1.4.1"
 os.system('color A')
 print(f"N.O.V.A. {VERSION}")
 time.sleep(2)
 
-def reboot():
-    print("Rebooting script...")
-    time.sleep(1)
-    python = sys.executable
-    os.execl(python, python, *sys.argv)
 
 def get_joke():
     url = "https://v2.jokeapi.dev/joke/Any?type=single"
