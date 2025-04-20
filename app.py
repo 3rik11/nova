@@ -10,48 +10,6 @@ import ast
 import webbrowser
 import requests
 
-def update_file_from_github(raw_url):
-    """
-    Replaces the contents of the current file with the contents of a file from a GitHub raw URL,
-    creating a backup first in the 'Backups' folder.
-    """
-    try:
-        # Define the backup folder path
-        user_documents = os.path.expanduser("~\\Documents")
-        nova_app_folder = os.path.join(user_documents, "NovaApp")
-        backup_folder = os.path.join(nova_app_folder, "Backups")
-
-        # Ensure the backup folder exists
-        if not os.path.exists(backup_folder):
-            os.makedirs(backup_folder)
-
-        # Get the current file path
-        current_file_path = os.path.abspath(__file__)
-
-        # Download the new content from GitHub
-        response = urllib.request.urlopen(raw_url)
-        new_content = response.read().decode('utf-8')
-
-        # Create a backup with timestamp
-        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        backup_file_path = os.path.join(backup_folder, f"app_backup_{timestamp}.py")
-        shutil.copy2(current_file_path, backup_file_path)
-
-        # Write new content to the current file
-        with open(current_file_path, 'w', encoding='utf-8') as current_file:
-            current_file.write(new_content)
-
-        print(f"✅ File successfully updated from GitHub. Backup created at: {backup_file_path}")
-
-        script_path = os.path.abspath(__file__)
-        os.system(f'start "" cmd /c "python \"{script_path}\""')
-        #sys.exit()
-    except Exception as e:
-        print(f"❌ Update failed: {e}")
-
-# Run the update function on startup
-raw_url = "https://raw.githubusercontent.com/3rik11/nova/main/app.py"  # Replace with your raw URL
-update_file_from_github(raw_url)
 VERSION = "v1.4.1"
 os.system('color A')
 print(f"N.O.V.A. {VERSION}")
