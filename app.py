@@ -48,24 +48,27 @@ def update_file_from_github(raw_url):
 # Run the update function on startup
 github_raw_url = "https://raw.githubusercontent.com/3rik11/nova/main/app.py"  # Replace with your raw URL
 update_file_from_github(github_raw_url)
-VERSION = "v1.4.0"
+VERSION = "v1.4.1"
 os.system('color A')
 print(f"N.O.V.A. {VERSION}")
 time.sleep(2)
 
-def get_quote():
-    url = "https://api.quotable.io/random"
+def reboot():
+    print("Rebooting script...")
+    time.sleep(1)
+    python = sys.executable
+    os.execl(python, python, *sys.argv)
+
+def get_joke():
+    url = "https://v2.jokeapi.dev/joke/Any?type=single"
     try:
         response = requests.get(url)
         data = response.json()
-        
-        # Extracting the quote and author
-        quote = data['content']
-        author = data['author']
-        
-        return f'"{quote}" - {author}'
+        if data["error"]:
+            return "Sorry, I couldn't fetch a joke right now."
+        return data["joke"]
     except Exception as e:
-        print(f"Error fetching quote: {e}")
+        return f"Oops! Something went wrong: {e}"
 
 def clear_backups(backup_folder):
     """
@@ -187,12 +190,12 @@ def nova(name, dob, first_time):
             type("9. reboot - Reboots N.O.V.A.", 0.02)
             type("10. signin - Ask me for a unique password that stores all of your details so you dont have to enter them every time you login.", 0.02)
             type("11. clearbackups - Clears all backups older than 7 days.", 0.02)
-            type("12. quote - Shows a quote.", 0.02)
+            type("12. joke - Shows a joke.", 0.02)
             time.sleep(2)
             clear()
-        elif command == "quote":
+        elif command == "joke":
             clear()
-            joke = get_quote()
+            joke = get_joke()
             type(joke, 0.05)
             input("Press Enter to continue...")
             clear()
@@ -209,14 +212,7 @@ def nova(name, dob, first_time):
             input("Press Enter to continue...")
             clear()
         elif command == "reboot":
-            if os.name == 'nt':
-                user = os.getlogin()
-                os.system(fr'start cmd /k "cd /d C:\Users\{user}\Documents\NovaApp && python app.py"')
-                os.system('exit')
-                break
-            else:
-                os.system(f'python3 "{os.path.abspath(__file__)}" &')
-                exit()
+                reboot()
         elif command == "color":
             if os.name == 'nt':
                 colors = [
