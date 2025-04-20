@@ -10,7 +10,7 @@ import ast
 import webbrowser
 import requests
 
-VERSION = "v1.4.3"
+VERSION = "v1.4.4"
 os.system('color A')
 print(f"N.O.V.A. {VERSION}")
 time.sleep(2)
