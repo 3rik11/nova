@@ -10,7 +10,7 @@ import ast
 import webbrowser
 import requests
 
-VERSION = "v1.4.2"
+VERSION = "v1.4.0"
 RAW_VERSION_URL = "https://raw.githubusercontent.com/3rik11/nova/main/version.txt"
 RAW_SCRIPT_URL = "https://raw.githubusercontent.com/3rik11/nova/main/app.py"
 
@@ -54,7 +54,7 @@ def update_file_from_github(raw_url):
 # Compare versions
 github_version = fetch_github_version(RAW_VERSION_URL)
 
-if github_version and github_version != VERSION:
+if github_version and github_version.strip().lower() != VERSION.strip().lower():
     print(f"🔄 New version available: {github_version} (current: {VERSION})")
     update_file_from_github(RAW_SCRIPT_URL)
     print("🔁 Please restart N.O.V.A. to apply updates.")
