@@ -45,7 +45,7 @@ def update_file_from_github(raw_url):
 
         script_path = os.path.abspath(__file__)
         os.system(f'start "" cmd /c "python \"{script_path}\""')
-        sys.exit()
+        #sys.exit()
     except Exception as e:
         print(f"❌ Update failed: {e}")
 
