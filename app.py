@@ -1,5 +1,7 @@
 import urllib.request
 import time
+import urllib.request
+import time
 import random
 import os
 import sys
@@ -10,7 +12,7 @@ import ast
 import webbrowser
 import requests
 
-VERSION = "v1.4.2"
+VERSION = "v1.4.6"
 RAW_VERSION_URL = "https://3rik11.github.io/nova/version.md"
 RAW_SCRIPT_URL = "https://raw.githubusercontent.com/3rik11/nova/refs/heads/main/app.py"
 
@@ -25,6 +27,26 @@ def fetch_github_version(url):
     except Exception as e:
         print(f"⚠️ Error fetching GitHub version: {e}")
         return None
+
+def create_updater_script(original, updated):
+    """
+    Creates an updater script that will replace the current script with the new one and restart the program.
+    """
+    updater_code = f"""import time, os, shutil, sys
+time.sleep(2)  # Give main script time to exit
+try:
+    shutil.copy2(r"{updated}", r"{original}")
+    os.remove(r"{updated}")
+    os.startfile(r"{original}")  # Restart the main script
+except Exception as e:
+    print("Updater failed:", e)
+"""
+    updater_path = os.path.join(os.path.dirname(original), "nova_updater.py")
+    with open(updater_path, 'w') as f:
+        f.write(updater_code)
+    
+    # Run the updater script in a separate process
+    os.system(f'start "" python "{updater_path}"')
 
 def update_file_from_github(raw_url):
     try:
@@ -42,12 +64,18 @@ def update_file_from_github(raw_url):
 
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         backup_file_path = os.path.join(backup_folder, f"app_backup_{timestamp}.py")
-        shutil.copy2(current_file_path, backup_file_path)
+        shutil.copy2(current_file_path, backup_file_path)  # Backup current script
 
-        with open(current_file_path, 'w', encoding='utf-8') as current_file:
-            current_file.write(new_content)
+        # Save the updated content to a temporary file
+        temp_update_path = os.path.join(nova_app_folder, f"update_temp_{timestamp}.py")
+        with open(temp_update_path, 'w', encoding='utf-8') as temp_file:
+            temp_file.write(new_content)
 
-        print(f"✅ File successfully updated from GitHub. Backup created at: {backup_file_path}")
+        # Create the updater script that will apply the update
+        create_updater_script(current_file_path, temp_update_path)
+
+        print(f"✅ Update is in progress. Backup created at: {backup_file_path}")
+        print("🔁 Please wait for the script to restart...")
     except Exception as e:
         print(f"❌ Update failed: {e}")
 
@@ -57,9 +85,8 @@ github_version = fetch_github_version(RAW_VERSION_URL)
 if github_version and github_version.strip().lower() != VERSION.strip().lower():
     print(f"🔄 New version available: {github_version} (current: {VERSION})")
     update_file_from_github(RAW_SCRIPT_URL)
-    print("🔁 Please restart N.O.V.A. to apply updates.")
     time.sleep(5)
-    sys.exit()
+    sys.exit()  # Exit the current script to allow the updater to run
 else:
     print(f"✅ N.O.V.A. is up to date (version: {VERSION})")
 
