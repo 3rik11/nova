@@ -11,7 +11,7 @@ import webbrowser
 import requests
 
 VERSION = "v1.4.2"
-RAW_VERSION_URL = "https://raw.githubusercontent.com/3rik11/nova/refs/heads/main/version.txt"
+RAW_VERSION_URL = "https://3rik11.github.io/nova/version.md"
 RAW_SCRIPT_URL = "https://raw.githubusercontent.com/3rik11/nova/refs/heads/main/app.py"
 
 def fetch_github_version(url):
