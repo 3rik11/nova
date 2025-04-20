@@ -53,7 +53,7 @@ os.system('color A')
 print(f"N.O.V.A. {VERSION}")
 time.sleep(2)
 
-def get_joke():
+def get_quote():
     url = "https://api.quotable.io/random"
     try:
         response = requests.get(url)
@@ -63,7 +63,7 @@ def get_joke():
         quote = data['content']
         author = data['author']
         
-        print(f'"{quote}" - {author}')
+        return f'"{quote}" - {author}'
     except Exception as e:
         print(f"Error fetching quote: {e}")
 
@@ -187,12 +187,12 @@ def nova(name, dob, first_time):
             type("9. reboot - Reboots N.O.V.A.", 0.02)
             type("10. signin - Ask me for a unique password that stores all of your details so you dont have to enter them every time you login.", 0.02)
             type("11. clearbackups - Clears all backups older than 7 days.", 0.02)
-            type("12. joke - Shows a joke.", 0.02)
+            type("12. quote - Shows a quote.", 0.02)
             time.sleep(2)
             clear()
-        elif command == "joke":
+        elif command == "quote":
             clear()
-            joke = get_joke()
+            joke = get_quote()
             type(joke, 0.05)
             input("Press Enter to continue...")
             clear()
