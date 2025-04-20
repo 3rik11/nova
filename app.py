@@ -10,61 +10,59 @@ import ast
 import webbrowser
 import requests
 
-def update_file_from_github(raw_url):
-    """
-    Replaces the contents of the current file with the contents of a file from a GitHub raw URL,
-    but only if the content is different. Creates a backup in the 'Backups' folder before replacing.
-    """
+VERSION = "v1.4.1"
+RAW_VERSION_URL = "https://raw.githubusercontent.com/3rik11/nova/main/version.txt"
+RAW_SCRIPT_URL = "https://raw.githubusercontent.com/3rik11/nova/main/app.py"
+
+def fetch_github_version(url):
     try:
-        # Define paths
+        response = requests.get(url)
+        if response.status_code == 200:
+            return response.text.strip()
+        else:
+            print("⚠️ Failed to fetch version from GitHub.")
+            return None
+    except Exception as e:
+        print(f"⚠️ Error fetching GitHub version: {e}")
+        return None
+
+def update_file_from_github(raw_url):
+    try:
         user_documents = os.path.expanduser("~\\Documents")
         nova_app_folder = os.path.join(user_documents, "NovaApp")
         backup_folder = os.path.join(nova_app_folder, "Backups")
 
-        # Ensure backup folder exists
-        os.makedirs(backup_folder, exist_ok=True)
+        if not os.path.exists(backup_folder):
+            os.makedirs(backup_folder)
 
-        # Get current file path
         current_file_path = os.path.abspath(__file__)
 
-        # Read current file content
-        with open(current_file_path, 'r', encoding='utf-8') as f:
-            current_content = f.read()
-
-        # Download latest file content from GitHub
         response = urllib.request.urlopen(raw_url)
         new_content = response.read().decode('utf-8')
 
-       # Normalize line endings and strip extra spaces
-        normalized_current = current_content.replace('\r\n', '\n').strip()
-        normalized_new = new_content.replace('\r\n', '\n').strip()
-
-        if normalized_current == normalized_new:
-            print("🟩 You already have the latest version of app.py.")
-            return  # Exit if no update is needed
-
-        # Create a timestamped backup
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         backup_file_path = os.path.join(backup_folder, f"app_backup_{timestamp}.py")
         shutil.copy2(current_file_path, backup_file_path)
-        print(f"🔒 Backup of existing app.py saved to: {backup_file_path}")
 
-        # Write new content to the current file
-        with open(current_file_path, 'w', encoding='utf-8') as f:
-            f.write(new_content)
+        with open(current_file_path, 'w', encoding='utf-8') as current_file:
+            current_file.write(new_content)
 
-        print("✅ app.py has been successfully updated from GitHub.")
-        print("🔁 Please restart the application to apply changes.")
-        input("Press enter to exit...")
-        sys.exit()
-
+        print(f"✅ File successfully updated from GitHub. Backup created at: {backup_file_path}")
     except Exception as e:
         print(f"❌ Update failed: {e}")
 
-# Run the update function on startup
-raw_url = "https://raw.githubusercontent.com/3rik11/nova/main/app.py"  # Replace with your raw URL
-update_file_from_github(raw_url)
-VERSION = "v1.4.1"
+# Compare versions
+github_version = fetch_github_version(RAW_VERSION_URL)
+
+if github_version and github_version != VERSION:
+    print(f"🔄 New version available: {github_version} (current: {VERSION})")
+    update_file_from_github(RAW_SCRIPT_URL)
+    print("🔁 Please restart N.O.V.A. to apply updates.")
+    time.sleep(5)
+    sys.exit()
+else:
+    print(f"✅ N.O.V.A. is up to date (version: {VERSION})")
+
 os.system('color A')
 print(f"N.O.V.A. {VERSION}")
 time.sleep(2)
