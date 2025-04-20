@@ -2,6 +2,20 @@ import os
 import shutil
 import sys
 from pathlib import Path
+import subprocess
+
+def uninstall_libraries():
+    libraries_to_uninstall = ["pywin32", "requests"]
+
+    for lib in libraries_to_uninstall:
+        try:
+            # Try to import the library
+            __import__(lib)
+            print(f"Uninstalling {lib}...")
+            subprocess.check_call([sys.executable, "-m", "pip", "uninstall", "-y", lib])
+        except ImportError:
+            # If library is already uninstalled, skip it
+            print(f"{lib} is not installed, skipping uninstallation.")
 
 def delete_folder(folder_path):
     """Deletes the folder and all its contents."""
@@ -47,6 +61,9 @@ def uninstall():
 
         # Delete the shortcut from the desktop
         delete_shortcut()
+
+        # Uninstall the libraries
+        uninstall_libraries()
 
         print("✅ Uninstallation completed successfully.")
     except Exception as e:

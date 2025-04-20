@@ -9,6 +9,7 @@ from datetime import datetime, date
 import ast
 import webbrowser
 import requests
+
 def update_file_from_github(raw_url):
     """
     Replaces the contents of the current file with the contents of a file from a GitHub raw URL,
