@@ -48,21 +48,24 @@ def update_file_from_github(raw_url):
 # Run the update function on startup
 github_raw_url = "https://raw.githubusercontent.com/3rik11/nova/main/app.py"  # Replace with your raw URL
 update_file_from_github(github_raw_url)
-VERSION = "v1.3.9"
+VERSION = "v1.4.0"
 os.system('color A')
 print(f"N.O.V.A. {VERSION}")
 time.sleep(2)
 
 def get_joke():
-    url = "https://v2.jokeapi.dev/joke/Any?type=single"
+    url = "https://api.quotable.io/random"
     try:
         response = requests.get(url)
         data = response.json()
-        if data["error"]:
-            return "Sorry, I couldn't fetch a joke right now."
-        return data["joke"]
+        
+        # Extracting the quote and author
+        quote = data['content']
+        author = data['author']
+        
+        print(f'"{quote}" - {author}')
     except Exception as e:
-        return f"Oops! Something went wrong: {e}"
+        print(f"Error fetching quote: {e}")
 
 def clear_backups(backup_folder):
     """
