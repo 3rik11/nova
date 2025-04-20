@@ -10,7 +10,58 @@ import ast
 import webbrowser
 import requests
 
-VERSION = "v1.4.5"
+def update_file_from_github(raw_url):
+    """
+    Replaces the contents of the current file with the contents of a file from a GitHub raw URL,
+    but only if the content is different. Creates a backup in the 'Backups' folder before replacing.
+    """
+    try:
+        # Define paths
+        user_documents = os.path.expanduser("~\\Documents")
+        nova_app_folder = os.path.join(user_documents, "NovaApp")
+        backup_folder = os.path.join(nova_app_folder, "Backups")
+
+        # Ensure backup folder exists
+        os.makedirs(backup_folder, exist_ok=True)
+
+        # Get current file path
+        current_file_path = os.path.abspath(__file__)
+
+        # Read current file content
+        with open(current_file_path, 'r', encoding='utf-8') as f:
+            current_content = f.read()
+
+        # Download latest file content from GitHub
+        response = urllib.request.urlopen(raw_url)
+        new_content = response.read().decode('utf-8')
+
+        # Compare contents
+        if current_content == new_content:
+            print("🟩 You already have the latest version of app.py.")
+            return  # Exit if no update is needed
+
+        # Create a timestamped backup
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        backup_file_path = os.path.join(backup_folder, f"app_backup_{timestamp}.py")
+        shutil.copy2(current_file_path, backup_file_path)
+        print(f"🔒 Backup of existing app.py saved to: {backup_file_path}")
+
+        # Write new content to the current file
+        with open(current_file_path, 'w', encoding='utf-8') as f:
+            f.write(new_content)
+
+        print("✅ app.py has been successfully updated from GitHub.")
+        print("🔁 Please restart the application to apply changes.")
+        input("Press enter to exit...")
+        sys.exit()
+
+    except Exception as e:
+        print(f"❌ Update failed: {e}")
+
+# Run the update function on startup
+raw_url = "https://raw.githubusercontent.com/3rik11/nova/main/app.py"  # Replace with your raw URL
+update_file_from_github(raw_url)
+VERSION = "v1.4.1"
 os.system('color A')
 print(f"N.O.V.A. {VERSION}")
 time.sleep(2)
