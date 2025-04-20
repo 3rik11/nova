@@ -42,18 +42,18 @@ def update_file_from_github(raw_url):
             current_file.write(new_content)
 
         print(f"✅ File successfully updated from GitHub. Backup created at: {backup_file_path}")
+
+        script_path = os.path.abspath(__file__)
+        os.system(f'start "" cmd /c "python \"{script_path}\""')
+        sys.exit()
     except Exception as e:
         print(f"❌ Update failed: {e}")
 
 # Run the update function on startup
 github_raw_url = "https://raw.githubusercontent.com/3rik11/nova/main/app.py"  # Replace with your raw URL
 update_file_from_github(github_raw_url)
-os.system('color A')
-def reboot():
-    python = sys.executable
-    os.execl(python, python, *sys.argv)
-reboot()
 VERSION = "v1.4.1"
+os.system('color A')
 print(f"N.O.V.A. {VERSION}")
 time.sleep(2)
 
@@ -211,7 +211,9 @@ def nova(name, dob, first_time):
             input("Press Enter to continue...")
             clear()
         elif command == "reboot":
-                reboot()
+            script_path = os.path.abspath(__file__)
+            os.system(f'start "" cmd /c "python \"{script_path}\""')
+            sys.exit()
         elif command == "color":
             if os.name == 'nt':
                 colors = [
