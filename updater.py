@@ -4,10 +4,12 @@ import urllib.request
 import shutil
 import subprocess
 import sys
+
 def update_app_py_from_github(raw_url):
     """
     Downloads app.py from a GitHub raw URL and replaces the existing app.py in the NovaApp folder,
-    creating a timestamped backup in the Backups folder. Then opens the app.py file in a new command prompt.
+    creating a timestamped backup in the Backups folder. Then opens the app.py file in a new command prompt,
+    and closes the command prompt after the script finishes.
     """
     try:
         # Define paths
@@ -35,8 +37,8 @@ def update_app_py_from_github(raw_url):
             f.write(new_content)
         print("✅ app.py has been successfully updated from GitHub.")
 
-        # Open the updated app.py in a new command prompt (cmd)
-        cmd_command = f"start cmd.exe /K python \"{app_file_path}\""
+        # Open the updated app.py in a new command prompt (cmd) and close the cmd window after execution
+        cmd_command = f"start cmd.exe /C python \"{app_file_path}\""
         os.system(cmd_command)
     except Exception as e:
         print(f"❌ Update failed: {e}")
