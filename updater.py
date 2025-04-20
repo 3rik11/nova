@@ -3,7 +3,7 @@ import datetime
 import urllib.request
 import shutil
 import subprocess
-
+import sys
 def update_app_py_from_github(raw_url):
     """
     Downloads app.py from a GitHub raw URL and replaces the existing app.py in the NovaApp folder,
@@ -46,3 +46,4 @@ if __name__ == "__main__":
     # Example raw URL of the updated app.py file
     GITHUB_RAW_URL = "https://raw.githubusercontent.com/3rik11/nova/main/app.py"
     update_app_py_from_github(GITHUB_RAW_URL)
+    sys.exit()
