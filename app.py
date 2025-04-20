@@ -9,56 +9,56 @@ from datetime import datetime, date
 import ast
 import webbrowser
 import requests
+import subprocess
 
-# Check if update reboot flag exists
-def check_reboot_flag():
-    """Check for reboot flag file and remove it to avoid infinite loop"""
-    flag_path = os.path.join(os.path.expanduser("~\\Documents"), "NovaApp", "reboot.flag")
-    if os.path.exists(flag_path):
-        os.remove(flag_path)
-        print("✅ Rebooted after update. Continuing as normal...")
+GITHUB_URL = "https://raw.githubusercontent.com/3rik11/nova/main/app.py"
+APP_PATH = os.path.abspath(__file__)
+APP_DIR = os.path.dirname(APP_PATH)
+TEMP_PATH = os.path.join(APP_DIR, "temp_update_check.py")
 
-def update_file_from_github(raw_url):
+
+def update_file_from_github():
     try:
-        current_file = os.path.abspath(__file__)
-        response = urllib.request.urlopen(raw_url)
-        new_content = response.read().decode('utf-8')
+        print("🔍 Checking for updates...")
+        urllib.request.urlretrieve(GITHUB_URL, TEMP_PATH)
 
-        with open(current_file, 'r', encoding='utf-8') as f:
-            current_content = f.read()
+        with open(APP_PATH, 'r', encoding='utf-8') as current, open(TEMP_PATH, 'r', encoding='utf-8') as latest:
+            current_code = current.read()
+            new_code = latest.read()
 
-        if new_content == current_content:
-            print("✅ No update needed.")
+        if current_code == new_code:
+            print("✅ App is up to date.")
+            os.remove(TEMP_PATH)
             return
 
+        print("⬆️  Update found! Applying...")
+
         # Backup current version
-        nova_folder = os.path.join(os.path.expanduser("~\\Documents"), "NovaApp")
-        backup_folder = os.path.join(nova_folder, "Backups")
-        os.makedirs(backup_folder, exist_ok=True)
-
+        backup_dir = os.path.join(APP_DIR, "Backups")
+        os.makedirs(backup_dir, exist_ok=True)
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        backup_path = os.path.join(backup_folder, f"app_backup_{timestamp}.py")
-        shutil.copy2(current_file, backup_path)
+        backup_path = os.path.join(backup_dir, f"app_backup_{timestamp}.py")
+        shutil.copy2(APP_PATH, backup_path)
 
-        # Write new version
-        with open(current_file, 'w', encoding='utf-8') as f:
-            f.write(new_content)
+        # Replace app.py
+        shutil.move(TEMP_PATH, APP_PATH)
 
-        # Create reboot flag
-        with open(os.path.join(nova_folder, "reboot.flag"), 'w') as f:
-            f.write("reboot")
-
-        print("🔄 Update applied. Rebooting...")
-        os.system(f'start "" cmd /c "python \"{current_file}\""')
+        # Reboot in new CMD window
+        print("🔁 Rebooting with updated version...")
+        subprocess.Popen(['cmd', '/c', f'start', 'cmd', '/k', f'python "{APP_PATH}"'])
         sys.exit()
 
     except Exception as e:
         print(f"❌ Update failed: {e}")
+        if os.path.exists(TEMP_PATH):
+            os.remove(TEMP_PATH)
+
 
 def reboot_script():
-    script_path = os.path.abspath(__file__)
-    os.system(f'start "" cmd /c "python \"{script_path}\""')
+    print("🔁 Rebooting...")
+    subprocess.Popen(['cmd', '/c', f'start', 'cmd', '/k', f'python "{APP_PATH}"'])
     sys.exit()
+
 
 
 # Run the update function on startup
