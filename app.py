@@ -248,6 +248,7 @@ def nova(name, dob, first_time):
             clear()
             type("GOODBYE, " + name, 0.05)
             os.system('exit')
+            break
         elif command == "clear":
             clear()
         elif command == "calculator":

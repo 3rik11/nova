@@ -8,6 +8,7 @@ import sys
 
 # Function to ensure required libraries are installed
 def install_required_libraries():
+
     required_libraries = ["pywin32", "requests"]
 
     for lib in required_libraries:
