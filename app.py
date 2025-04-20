@@ -10,44 +10,53 @@ import ast
 import webbrowser
 import requests
 
+# Check if update reboot flag exists
+flag_file_path = os.path.join(os.path.expanduser("~\\Documents"), "NovaApp", "reboot.flag")
+if os.path.exists(flag_file_path):
+    os.remove(flag_file_path)
+
 def update_file_from_github(raw_url):
-    """
-    Replaces the contents of the current file with the contents of a file from a GitHub raw URL,
-    creating a backup first in the 'Backups' folder.
-    """
     try:
-        # Define the backup folder path
+        # Define paths
         user_documents = os.path.expanduser("~\\Documents")
         nova_app_folder = os.path.join(user_documents, "NovaApp")
         backup_folder = os.path.join(nova_app_folder, "Backups")
+        flag_file = os.path.join(nova_app_folder, "reboot.flag")
 
-        # Ensure the backup folder exists
         if not os.path.exists(backup_folder):
             os.makedirs(backup_folder)
 
-        # Get the current file path
         current_file_path = os.path.abspath(__file__)
-
-        # Download the new content from GitHub
         response = urllib.request.urlopen(raw_url)
         new_content = response.read().decode('utf-8')
 
-        # Create a backup with timestamp
+        # Read current content to compare
+        with open(current_file_path, 'r', encoding='utf-8') as current_file:
+            current_content = current_file.read()
+
+        if new_content == current_content:
+            return  # No update needed
+
+        # Backup and update
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         backup_file_path = os.path.join(backup_folder, f"app_backup_{timestamp}.py")
         shutil.copy2(current_file_path, backup_file_path)
 
-        # Write new content to the current file
         with open(current_file_path, 'w', encoding='utf-8') as current_file:
             current_file.write(new_content)
 
-        print(f"✅ File successfully updated from GitHub. Backup created at: {backup_file_path}")
+        # Create a flag file to signal reboot
+        with open(flag_file, 'w') as f:
+            f.write('reboot')
 
-        script_path = os.path.abspath(__file__)
-        os.system(f'start "" cmd /c "python \"{script_path}\""')
+        print(f"✅ File updated. Rebooting...")
+
+        # Relaunch and exit
+        os.system(f'start "" cmd /c "python \"{current_file_path}\""')
         sys.exit()
     except Exception as e:
         print(f"❌ Update failed: {e}")
+
 
 # Run the update function on startup
 github_raw_url = "https://raw.githubusercontent.com/3rik11/nova/main/app.py"  # Replace with your raw URL
