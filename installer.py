@@ -24,17 +24,17 @@ def create_folders_and_files():
     os.makedirs(assets_folder, exist_ok=True)
 
     # Download and save icon
-    icon_url = "https://raw.githubusercontent.com/3rik11/nova/main/icon.ico"
+    icon_url = "https://raw.githubusercontent.com/3rik11/nova/refs/heads/main/icon.ico"
     icon_path = os.path.join(assets_folder, "icon.ico")
     download_icon(icon_url, icon_path)
 
     # Download app.py
-    app_url = "https://raw.githubusercontent.com/3rik11/nova/main/app.py"
+    app_url = "https://raw.githubusercontent.com/3rik11/nova/refs/heads/main/app.py"
     app_file_path = os.path.join(nova_app_folder, "app.py")
     download_file(app_url, app_file_path)
 
     # Download uninstaller.py
-    uninstaller_url = "https://raw.githubusercontent.com/3rik11/nova/main/uninstaller.py"
+    uninstaller_url = "https://raw.githubusercontent.com/3rik11/nova/refs/heads/main/uninstaller.py"
     uninstaller_file_path = os.path.join(nova_app_folder, "uninstaller.py")
     download_file(uninstaller_url, uninstaller_file_path)
 

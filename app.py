@@ -12,7 +12,7 @@ import requests
 
 VERSION = "v1.4.1"
 RAW_VERSION_URL = "https://raw.githubusercontent.com/3rik11/nova/refs/heads/main/version.txt"
-RAW_SCRIPT_URL = "https://raw.githubusercontent.com/3rik11/nova/main/app.py"
+RAW_SCRIPT_URL = "https://raw.githubusercontent.com/3rik11/nova/refs/heads/main/app.py"
 
 def fetch_github_version(url):
     try:
