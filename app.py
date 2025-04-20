@@ -9,61 +9,49 @@ from datetime import datetime, date
 import ast
 import webbrowser
 import requests
-import subprocess
 
-GITHUB_URL = "https://raw.githubusercontent.com/3rik11/nova/main/app.py"
-APP_PATH = os.path.abspath(__file__)
-APP_DIR = os.path.dirname(APP_PATH)
-TEMP_PATH = os.path.join(APP_DIR, "temp_update_check.py")
-
-
-def update_file_from_github():
+def update_file_from_github(raw_url):
+    """
+    Replaces the contents of the current file with the contents of a file from a GitHub raw URL,
+    creating a backup first in the 'Backups' folder.
+    """
     try:
-        print("🔍 Checking for updates...")
-        urllib.request.urlretrieve(GITHUB_URL, TEMP_PATH)
+        # Define the backup folder path
+        user_documents = os.path.expanduser("~\\Documents")
+        nova_app_folder = os.path.join(user_documents, "NovaApp")
+        backup_folder = os.path.join(nova_app_folder, "Backups")
 
-        with open(APP_PATH, 'r', encoding='utf-8') as current, open(TEMP_PATH, 'r', encoding='utf-8') as latest:
-            current_code = current.read()
-            new_code = latest.read()
+        # Ensure the backup folder exists
+        if not os.path.exists(backup_folder):
+            os.makedirs(backup_folder)
 
-        if current_code == new_code:
-            print("✅ App is up to date.")
-            os.remove(TEMP_PATH)
-            return
+        # Get the current file path
+        current_file_path = os.path.abspath(__file__)
 
-        print("⬆️  Update found! Applying...")
+        # Download the new content from GitHub
+        response = urllib.request.urlopen(raw_url)
+        new_content = response.read().decode('utf-8')
 
-        # Backup current version
-        backup_dir = os.path.join(APP_DIR, "Backups")
-        os.makedirs(backup_dir, exist_ok=True)
+        # Create a backup with timestamp
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        backup_path = os.path.join(backup_dir, f"app_backup_{timestamp}.py")
-        shutil.copy2(APP_PATH, backup_path)
+        backup_file_path = os.path.join(backup_folder, f"app_backup_{timestamp}.py")
+        shutil.copy2(current_file_path, backup_file_path)
 
-        # Replace app.py
-        shutil.move(TEMP_PATH, APP_PATH)
+        # Write new content to the current file
+        with open(current_file_path, 'w', encoding='utf-8') as current_file:
+            current_file.write(new_content)
 
-        # Reboot in new CMD window
-        print("🔁 Rebooting with updated version...")
-        subprocess.Popen(['cmd', '/c', f'start', 'cmd', '/k', f'python "{APP_PATH}"'])
+        print(f"✅ File successfully updated from GitHub. Backup created at: {backup_file_path}")
+
+        script_path = os.path.abspath(__file__)
+        os.system(f'start "" cmd /c "python \"{script_path}\""')
         sys.exit()
-
     except Exception as e:
         print(f"❌ Update failed: {e}")
-        if os.path.exists(TEMP_PATH):
-            os.remove(TEMP_PATH)
-
-
-def reboot_script():
-    print("🔁 Rebooting...")
-    subprocess.Popen(['cmd', '/c', f'start', 'cmd', '/k', f'python "{APP_PATH}"'])
-    sys.exit()
-
-
 
 # Run the update function on startup
 github_raw_url = "https://raw.githubusercontent.com/3rik11/nova/main/app.py"  # Replace with your raw URL
-update_file_from_github()
+update_file_from_github(github_raw_url)
 VERSION = "v1.4.1"
 os.system('color A')
 print(f"N.O.V.A. {VERSION}")
@@ -223,7 +211,9 @@ def nova(name, dob, first_time):
             input("Press Enter to continue...")
             clear()
         elif command == "reboot":
-            reboot_script()
+            script_path = os.path.abspath(__file__)
+            os.system(f'start "" cmd /c "python \"{script_path}\""')
+            sys.exit()
         elif command == "color":
             if os.name == 'nt':
                 colors = [
