@@ -10,7 +10,7 @@ import ast
 import webbrowser
 import requests
 
-VERSION = "v1.4.1"
+VERSION = "v1.4.2"
 RAW_VERSION_URL = "https://raw.githubusercontent.com/3rik11/nova/refs/heads/main/version.txt"
 RAW_SCRIPT_URL = "https://raw.githubusercontent.com/3rik11/nova/refs/heads/main/app.py"
 
