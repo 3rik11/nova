@@ -36,22 +36,11 @@ def update_app_py_from_github(raw_url):
         print("✅ app.py has been successfully updated from GitHub.")
 
         # Open the updated app.py in a new command prompt (cmd)
-        open_app_in_cmd(app_file_path)
-
+        cmd_command = f"start cmd.exe /K python \"{app_file_path}\""
+        os.system(cmd_command)
     except Exception as e:
         print(f"❌ Update failed: {e}")
 
-def open_app_in_cmd(app_file_path):
-    """
-    Opens app.py in a new command prompt window.
-    """
-    try:
-        # Command to open app.py in a new cmd window
-        cmd_command = f"python \"{app_file_path}\""
-        subprocess.Popen(["cmd.exe", "/K", cmd_command])
-        print(f"✅ Opened app.py in a new command prompt.")
-    except Exception as e:
-        print(f"❌ Failed to open app.py in a new command prompt: {e}")
 
 if __name__ == "__main__":
     # Example raw URL of the updated app.py file
