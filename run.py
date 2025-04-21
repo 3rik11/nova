@@ -4,7 +4,7 @@ import subprocess
 from datetime import datetime, timedelta
 
 # Paths and URLs
-local_dir = os.path.expanduser("~/Documents/NovaApp")
+local_dir = os.path.expanduser(r"~/Documents/NovaApp")  # Ensure user folder is expanded correctly
 backup_dir = os.path.join(local_dir, "Backups")
 local_version_path = os.path.join(local_dir, "version.vrsn")
 local_app_path = os.path.join(local_dir, "app.py")
@@ -18,8 +18,14 @@ def run_app():
         print(f"Failed to run app.py: {e}")
 
 def create_backup():
+    # Ensure the backup folder exists
     if not os.path.exists(backup_dir):
-        os.makedirs(backup_dir)
+        try:
+            os.makedirs(backup_dir)  # Make sure the directory is created
+            print(f"Backup directory created: {backup_dir}")
+        except Exception as e:
+            print(f"Error creating backup directory: {e}")
+            return
 
     timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
     backup_filename = f"app_{timestamp}.py"
@@ -42,15 +48,18 @@ def cleanup_old_backups():
     # Check each file in the Backups directory
     for backup_file in os.listdir(backup_dir):
         backup_path = os.path.join(backup_dir, backup_file)
-        
+
         if os.path.isfile(backup_path):
             # Get the file's last modified time
             file_time = datetime.fromtimestamp(os.path.getmtime(backup_path))
-            
+
             # If the file is older than 7 days, delete it
             if file_time < threshold:
-                os.remove(backup_path)
-                print(f"Deleted old backup: {backup_file}")
+                try:
+                    os.remove(backup_path)
+                    print(f"Deleted old backup: {backup_file}")
+                except Exception as e:
+                    print(f"Error deleting backup {backup_file}: {e}")
 
 try:
     # Cleanup old backups (older than 7 days)
