@@ -17,15 +17,6 @@ VERSION = "v1.4.8"
 def clear():
     os.system('cls' if os.name == 'nt' else 'clear')
 
-version_file_path = os.path.join(os.path.expanduser("~"), "Documents", "NovaApp", "version.vrsn")
-try:
-    os.makedirs(os.path.dirname(version_file_path), exist_ok=True)  # Make sure the directory exists
-    with open(version_file_path, "w") as version_file:
-        version_file.write(VERSION)
-    print(f"Version {VERSION} written to version.txt")
-except Exception as e:
-    print(f"Failed to write version file: {e}")
-
 clear()
 os.system('color A')
 print(f"N.O.V.A. {VERSION}")

@@ -83,6 +83,14 @@ try:
             file.write(response.text)
         print("Downloaded new app.py")
 
+        version_file_path = os.path.join(os.path.expanduser("~"), "Documents", "NovaApp", "version.vrsn")
+        try:
+            os.makedirs(os.path.dirname(version_file_path), exist_ok=True)  # Make sure the directory exists
+            with open(version_file_path, "w") as version_file:
+                version_file.write(remote_version)
+        except Exception as e:
+            print(f"Failed to write version file: {e}")
+
         # Update the version file
         with open(local_version_path, 'w', encoding='utf-8') as file:
             file.write(remote_version)
