@@ -38,10 +38,15 @@ def create_folders_and_files():
     uninstaller_file_path = os.path.join(nova_app_folder, "uninstaller.py")
     download_file(uninstaller_url, uninstaller_file_path)
 
+    # Download run.py
+    run_url = "https://raw.githubusercontent.com/3rik11/nova/refs/heads/main/run.py"
+    run_file_path = os.path.join(nova_app_folder, "run.py")
+    download_file(run_url, run_file_path)
+
     print(f"\nFiles installed in {nova_app_folder}")
 
     # Create shortcut to run updater.py
-    create_shortcut_on_desktop(app_file_path, icon_path)
+    create_shortcut_on_desktop(run_file_path, icon_path)
 
 def download_icon(url, path):
     try:
