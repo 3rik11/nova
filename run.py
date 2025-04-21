@@ -4,7 +4,7 @@ import subprocess
 from datetime import datetime, timedelta
 
 # Paths and URLs
-local_dir = os.path.expanduser(r"~/Documents/NovaApp")  # Ensure user folder is expanded correctly
+local_dir = os.path.join(os.getenv('USERPROFILE'), "Documents", "NovaApp")  # Ensure correct path for Windows
 backup_dir = os.path.join(local_dir, "Backups")
 local_version_path = os.path.join(local_dir, "version.vrsn")
 local_app_path = os.path.join(local_dir, "app.py")
@@ -18,15 +18,7 @@ def run_app():
         print(f"Failed to run app.py: {e}")
 
 def create_backup():
-    # Ensure the backup folder exists
-    if not os.path.exists(backup_dir):
-        try:
-            os.makedirs(backup_dir)  # Make sure the directory is created
-            print(f"Backup directory created: {backup_dir}")
-        except Exception as e:
-            print(f"Error creating backup directory: {e}")
-            return
-
+    # Do not create the backup directory; assume it already exists.
     timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
     backup_filename = f"app_{timestamp}.py"
     backup_path = os.path.join(backup_dir, backup_filename)

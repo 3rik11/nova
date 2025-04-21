@@ -20,8 +20,11 @@ def create_folders_and_files():
     user_documents = os.path.expanduser("~\\Documents")
     nova_app_folder = os.path.join(user_documents, "NovaApp")
     assets_folder = os.path.join(nova_app_folder, "assets")
+    backups_folder = os.path.join(nova_app_folder, "Backups")  # Add Backups folder
 
+    # Create required folders
     os.makedirs(assets_folder, exist_ok=True)
+    os.makedirs(backups_folder, exist_ok=True)  # Create Backups folder
 
     # Download and save icon
     icon_url = "https://raw.githubusercontent.com/3rik11/nova/refs/heads/main/icon.ico"
@@ -43,6 +46,7 @@ def create_folders_and_files():
     run_file_path = os.path.join(nova_app_folder, "run.py")
     download_file(run_url, run_file_path)
 
+    # Download version.vrsn
     vrsn_url = "https://raw.githubusercontent.com/3rik11/nova/refs/heads/main/version.vrsn"
     vrsn_file_path = os.path.join(nova_app_folder, "version.vrsn")
     download_file(vrsn_url, vrsn_file_path)
