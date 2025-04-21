@@ -12,7 +12,10 @@ import ast
 import webbrowser
 import requests
 
-VERSION = "v1.4.7"
+VERSION = "v1.4.8"
+
+def clear():
+    os.system('cls' if os.name == 'nt' else 'clear')
 
 version_file_path = os.path.join(os.path.expanduser("~"), "Documents", "NovaApp", "version.vrsn")
 try:
@@ -23,6 +26,7 @@ try:
 except Exception as e:
     print(f"Failed to write version file: {e}")
 
+clear()
 os.system('color A')
 print(f"N.O.V.A. {VERSION}")
 time.sleep(2)
@@ -85,8 +89,6 @@ def typein(text, delay):
         sys.stdout.flush()
         time.sleep(delay)
 
-def clear():
-    os.system('cls' if os.name == 'nt' else 'clear')
 
 def check_if_birthday(dob, space=1):
     try:
