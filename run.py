@@ -1,9 +1,11 @@
 import os
 import requests
 import subprocess
+from datetime import datetime, timedelta
 
 # Paths and URLs
 local_dir = os.path.expanduser("~/Documents/NovaApp")
+backup_dir = os.path.join(local_dir, "Backups")
 local_version_path = os.path.join(local_dir, "version.vrsn")
 local_app_path = os.path.join(local_dir, "app.py")
 remote_version_url = "https://3rik11.gituhb.io/nova/version.md"
@@ -15,9 +17,47 @@ def run_app():
     except Exception as e:
         print(f"Failed to run app.py: {e}")
 
+def create_backup():
+    if not os.path.exists(backup_dir):
+        os.makedirs(backup_dir)
+
+    timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+    backup_filename = f"app_{timestamp}.py"
+    backup_path = os.path.join(backup_dir, backup_filename)
+
+    try:
+        with open(local_app_path, 'r', encoding='utf-8') as original_file:
+            content = original_file.read()
+        with open(backup_path, 'w', encoding='utf-8') as backup_file:
+            backup_file.write(content)
+        print(f"Backed up app.py to {backup_filename}")
+    except Exception as e:
+        print(f"Failed to create backup: {e}")
+
+def cleanup_old_backups():
+    # Get the current time and the time threshold (7 days ago)
+    now = datetime.now()
+    threshold = now - timedelta(days=7)
+
+    # Check each file in the Backups directory
+    for backup_file in os.listdir(backup_dir):
+        backup_path = os.path.join(backup_dir, backup_file)
+        
+        if os.path.isfile(backup_path):
+            # Get the file's last modified time
+            file_time = datetime.fromtimestamp(os.path.getmtime(backup_path))
+            
+            # If the file is older than 7 days, delete it
+            if file_time < threshold:
+                os.remove(backup_path)
+                print(f"Deleted old backup: {backup_file}")
+
 try:
+    # Cleanup old backups (older than 7 days)
+    cleanup_old_backups()
+
     # Read local version
-    with open(local_version_path, 'r') as file:
+    with open(local_version_path, 'r', encoding='utf-8') as file:
         local_version = file.read().strip().lower()
 
     # Fetch remote version
@@ -29,20 +69,21 @@ try:
     if local_version != remote_version:
         print("Version mismatch detected. Updating app.py...")
 
-        # Delete old app.py if exists
+        # Backup current app.py
         if os.path.exists(local_app_path):
+            create_backup()
             os.remove(local_app_path)
             print("Deleted old app.py")
 
         # Download and save new app.py
         response = requests.get(remote_app_url)
         response.raise_for_status()
-        with open(local_app_path, 'w') as file:
+        with open(local_app_path, 'w', encoding='utf-8') as file:
             file.write(response.text)
         print("Downloaded new app.py")
 
-        # Optionally update the version.txt
-        with open(local_version_path, 'w') as file:
+        # Update the version file
+        with open(local_version_path, 'w', encoding='utf-8') as file:
             file.write(remote_version)
 
     else:
