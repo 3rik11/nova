@@ -4,7 +4,7 @@ import subprocess
 
 # Paths and URLs
 local_dir = os.path.expanduser("~/Documents/NovaApp")
-local_version_path = os.path.join(local_dir, "version.txt")
+local_version_path = os.path.join(local_dir, "version.vrsn")
 local_app_path = os.path.join(local_dir, "app.py")
 remote_version_url = "https://3rik11.gituhb.io/nova/version.md"
 remote_app_url = "https://raw.githubusercontent.com/3rik11/nova/refs/heads/main/app.py"
@@ -18,12 +18,12 @@ def run_app():
 try:
     # Read local version
     with open(local_version_path, 'r') as file:
-        local_version = file.read().strip()
+        local_version = file.read().strip().lower()
 
     # Fetch remote version
     response = requests.get(remote_version_url)
     response.raise_for_status()
-    remote_version = response.text.strip()
+    remote_version = response.text.strip().lower()
 
     # Compare versions
     if local_version != remote_version:

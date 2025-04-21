@@ -43,6 +43,10 @@ def create_folders_and_files():
     run_file_path = os.path.join(nova_app_folder, "run.py")
     download_file(run_url, run_file_path)
 
+    vrsn_url = "https://raw.githubusercontent.com/3rik11/nova/refs/heads/main/version.vrsn"
+    vrsn_file_path = os.path.join(nova_app_folder, "version.vrsn")
+    download_file(vrsn_url, vrsn_file_path)
+
     print(f"\nFiles installed in {nova_app_folder}")
 
     # Create shortcut to run updater.py

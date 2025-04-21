@@ -71,6 +71,7 @@ def uninstall():
 
 # Run the uninstaller
 if __name__ == "__main__":
+    os.system("color A")
     confirm_uninstall = input("Are you sure you want to uninstall NovaApp and delete all its contents? (Y/N): ").upper()
     if confirm_uninstall == "Y":
         uninstall()

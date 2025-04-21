@@ -14,7 +14,7 @@ import requests
 
 VERSION = "v1.4.7"
 
-version_file_path = os.path.join(os.path.expanduser("~"), "Documents", "NovaApp", "version.txt")
+version_file_path = os.path.join(os.path.expanduser("~"), "Documents", "NovaApp", "version.vrsn")
 try:
     os.makedirs(os.path.dirname(version_file_path), exist_ok=True)  # Make sure the directory exists
     with open(version_file_path, "w") as version_file:
